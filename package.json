@@ -14,12 +14,13 @@
   "slug": "local-addon-search-project",
   "description": "Add possibility to search for a project",
   "renderer": "lib/renderer.js",
+  "main": "lib/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/getflywheel/local-addon-boilerplate"
+    "url": "https://github.com/isuke01/local-addon-search-project"
   },
   "bugs": {
-    "url": "https://github.com/getflywheel/local-addon-boilerplate/issues"
+    "url": "https://github.com/isuke01/local-addon-search-project/issues"
   },
   "license": "MIT",
   "scripts": {

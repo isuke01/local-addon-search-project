@@ -1,88 +1,66 @@
-import {
-	BasicInput,
-	Close
-} from '@getflywheel/local-components';
-
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { BasicInput, Close } from '@getflywheel/local-components';
 import { ipcRenderer } from 'electron';
 
-export default class SitesSidebarSearch extends Component {
-	constructor (props) {
-		super(props);
+export default function SitesSidebarSearch() {
+	const [search, setSearch] = useState('');
+	const [sites, setSites] = useState(null);
+	const [matchingSites, setMatchingSites] = useState([]);
+	const inputRef = useRef(null);
 
-		this.state = {
-			search: '',
-			sites: null,
-			siteFound: '',
-		};
-	}
-
-	componentDidUpdate (previousProps, prevState) {
-		ipcRenderer.once('render-search', (event, value) => {
-			this.setState({ search: value });
-		});
-
-		if (this.state.search && this.state.sites && prevState.search !== this.state.search) {
-			if (this.state.search?.length < 2) {
-				return;
-			}
-
-			const currentSites = this.state.sites;
-			const sitesArray = Object.values(currentSites);
-
-			let siteSearch = '';
-			sitesArray.forEach((site) => {
-				if (site?.name?.toLowerCase().includes(this.state?.search?.toLowerCase())) {
-					if (prevState.siteFound !== site.name) {
-						siteSearch = site.name;
-						return;
-					}
-				}
-			});
-
-			if (siteSearch) {
-				this.setState({
-					siteFound: siteSearch,
-				});
-			}
-		}
-	}
-
-	componentDidMount() {
+	useEffect(() => {
 		ipcRenderer.send('fetch-sites');
 
 		ipcRenderer.once('get-sites', (event, value) => {
-			this.setState({ sites: value });
+			setSites(value);
 		});
-	}
 
-	handleSearch( value ) {
-		this.setState({ search: value });
-	}
+		ipcRenderer.on('render-search', (event, value) => {
+			setSearch(value);
+		});
+	}, []);
 
-	// Add search functionality to the sidebar
-	render () {
-		return (
-			<div className="site-search">
-				<BasicInput
-					minlength={2}
-					placeholder="Search for a site..."
-					value={this.state.search}
-					onChange={ (e) => this.setState({ search: e.target.value }) }
-				/>
-				{ this.state.search?.length > 2 && (
-					<>
-						<style>
-							{ `
-								nav a:not([data-site-name="${this.state.siteFound}"]) {
-									display: none;
-								}
-							` }
-						</style>
-						<Close onClick={() => this.setState({ search: '' })} />
-					</>
-				) }
-			</div>
-		);
-	}
+	useEffect(() => {
+		if (search && sites) {
+			const sitesArray = Object.values(sites);
+			const searchQuery = search.toLowerCase();
+
+			const filteredSites = sitesArray.filter(({ name }) => name?.toLowerCase().includes(searchQuery));
+
+			setMatchingSites(filteredSites);
+		}
+	}, [search, sites]);
+
+	const handleSearch = (value) => {
+		setSearch(value);
+	};
+
+	const dynamicStyles = search.length > 1
+		? matchingSites.map(({ name }) => `#SiteList a[data-site-name="${name}"]`).join(',\n') + ' {\n  display: block;\n}'
+		: '';
+
+	return (
+		<div className="site-search">
+			<BasicInput
+				ref={inputRef}
+				minLength={2}
+				placeholder="Search for a site..."
+				value={search}
+				onChange={(e) => handleSearch(e.target.value)}
+			/>
+			{search.length > 1 && (
+				<>
+				<style>
+					{`
+					#SiteList a {
+						display: none;
+					}
+					`}
+					{dynamicStyles}
+				</style>
+				<Close onClick={() => setSearch('')} />
+				</>
+			)}
+		</div>
+	);
 }
