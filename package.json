@@ -1,7 +1,7 @@
 {
-  "name": "dekode-local-addon",
+  "name": "local-addon-search-project",
   "productName": "LocalWP Search project",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "author": "Jørgen Stenshaugen && Lukasz Biedroń",
   "keywords": [
     "local-addon",
