@@ -1,0 +1,24 @@
+.site-search {
+	position: relative;
+	margin-top: 15px;
+	border-bottom: 2px solid #434344;
+}
+
+
+.site-search [class^="ButtonBase_"] {
+	position: absolute;
+	top: 14px;
+	right: 17px;
+}
+
+.site-search [class^="ButtonBase_"] svg {
+	width: 12px;
+	height: 12px;
+}
+
+
+.site-search .BasicInput input {
+	padding: 12px 8px;
+	border-radius: 2px;
+	pointer-events: all;
+}

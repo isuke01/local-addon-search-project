@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": false,
+		"declaration": false,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"jsx": "react",
+		"lib": ["es2017", "esnext.asynciterable", "dom"],
+		"module": "commonjs",
+		"noImplicitReturns": true,
+		"noImplicitAny": false,
+		"outDir": "./lib",
+		"resolveJsonModule": true,
+		"rootDir": "./src",
+		"typeRoots": ["./types", "./node_modules/@types"],
+		"sourceMap": true,
+		"strict": false,
+		"target": "es2015"
+	},
+	"exclude": [
+		"node_modules",
+		"src/**/*.test.ts",
+		"src/test",
+		"src/renderer",
+		"src/renderer.tsx"
+	],
+	"include": [
+		"src"
+	]
+}
